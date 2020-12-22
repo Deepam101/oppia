@@ -16,7 +16,7 @@
  * @fileoverview Controller for non strict validation fail modal.
  */
 angular.module('oppia').controller('SaveValidationFailModalController', [
-  '$scope', '$timeout', '$uibModalInstance', 'WindowRef',
+  '$scope', '$timeout', '$uibModalInSaveValidationFailModalControllerstance', 'WindowRef',
   function(
       $scope, $timeout, $uibModalInstance, WindowRef) {
     var MSECS_TO_REFRESH = 20;
@@ -32,3 +32,9 @@ angular.module('oppia').controller('SaveValidationFailModalController', [
     };
   }
 ]);
+
+export class SaveValidationFailModalController{
+  constructor(
+
+  ) {}
+}
