@@ -16,10 +16,11 @@
  * @fileoverview Component to get changes in human readable form.
  */
 
-angular.module('oppia').component('changesInHumanReadableForm', {
+export class changesInHumanReadableForm{
   bindings: {
     lostChanges: '='
   },
   template: require(
     './changes-in-human-readable-form.component.html')
-});
+}
+

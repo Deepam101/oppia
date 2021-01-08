@@ -15,26 +15,23 @@
 /**
  * @fileoverview Controller for non strict validation fail modal.
  */
-angular.module('oppia').controller('SaveValidationFailModalController', [
-  '$scope', '$timeout', '$uibModalInSaveValidationFailModalControllerstance', 'WindowRef',
-  function(
-      $scope, $timeout, $uibModalInstance, WindowRef) {
-    var MSECS_TO_REFRESH = 20;
-    var _refreshPage = function(delay) {
-      $timeout(function() {
-        WindowRef.nativeWindow.location.reload();
-      }, delay);
-    };
+import { WindowRef } from 'services/contextual/window-ref.service';
 
-    $scope.closeAndRefresh = function() {
-      $uibModalInstance.dismiss('cancel');
-      _refreshPage(MSECS_TO_REFRESH);
-    };
-  }
-]);
+export class SaveValidationFailModalController {
+MSECS_TO_REFRESH :number = 20;
+constructor(
+    private windowRef: WindowRef
+) {}
 
-export class SaveValidationFailModalController{
-  constructor(
 
-  ) {}
+_refreshPage(delay: number): void {
+  setTimeout(() => {
+    this.windowRef.nativeWindow.location.reload();
+  }, delay);
+}
+
+closeAndRefresh(): void {
+  $uibModalInstance.dismiss('cancel');
+  this._refreshPage(this.MSECS_TO_REFRESH);
+}
 }
