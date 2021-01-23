@@ -17,33 +17,42 @@
  */
 
 import { WindowRef } from 'services/contextual/window-ref.service';
+import { ExplorationDataService } from 'pages/exploration-editor-page/services/exploration-data.service.ts';
+import { LostChangeObjectFactory } from 'domain/exploration/LostChangeObjectFactory';
+import { LoggerService } from 'services/contextual/logger.service';
+import { ExplorationChange } from 'domain/exploration/exploration-draft.model';
 
 export class SaveVersionMismatchModalController {
+  MSECS_TO_REFRESH: number = 20;
   constructor(
-    private windowRef: WindowRef
-  ) {}
+    private windowRef: WindowRef,
+    private explorationDataService : ExplorationDataService,
+    private lostChanges: ExplorationChange[],
+    private lostChangeObjectFactory: LostChangeObjectFactory,
+    private loggerservice : LoggerService
+  ) {
+    let haslostChanges = (this.lostChanges && this.lostChanges.length > 0);
 
-   MSECS_TO_REFRESH: number = 20;
-   _refreshPage(delay: number): void {
-     setTimeout(() => {
-       this.windowRef.nativeWindow.location.reload();
-     }, delay);
-   }
-   // When the user clicks on discard changes button, signal backend
-   // to discard the draft and reload the page thereafter.
-   discardChanges(): void {
-     ExplorationDataService.discardDraft(() => {
-       this._refreshPage(this.MSECS_TO_REFRESH);
-     });
-   }
-
-    hasLostChanges = (lostChanges && lostChanges.length > 0);
-    if(hasLostChanges) {
+    if (haslostChanges) {
       // TODO(sll): This should also include changes to exploration
       // properties (such as the exploration title, category, etc.).
-      lostChanges = lostChanges.map(
-        LostChangeObjectFactory.createNew);
-      $log.error('Lost changes: ' + JSON.stringify(lostChanges));
+      lostChanges = this.lostChanges.map(
+        this.lostChangeObjectFactory.createNew);
+      this.loggerservice.error(
+        'Lost changes: ' + JSON.stringify(this.lostChanges));
     }
+  }
+  _refreshPage(delay: number): void {
+    setTimeout(() => {
+      this.windowRef.nativeWindow.location.reload();
+    }, delay);
+  }
+  // When the user clicks on discard changes button, signal backend
+  // to discard the draft and reload the page thereafter.
+  discardChanges(): void {
+    this.explorationDataService.discardDraft().then(() => {
+      this._refreshPage(this.MSECS_TO_REFRESH);
+    });
+  }
 }
 

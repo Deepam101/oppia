@@ -12,6 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { LostChangeObjectFactory } from 'domain/exploration/LostChangeObjectFactory';
+import { LoggerService } from 'services/contextual/logger.service';
+import { ExplorationChange } from 'domain/exploration/exploration-draft.model';
+
 /**
  * @fileoverview Controller for lost changes modal.
  */
@@ -39,3 +44,23 @@ angular.module('oppia').controller('LostChangesModalController', [
     $log.error('Lost changes: ' + JSON.stringify(lostChanges));
   }
 ]);
+
+
+export class LostChangesModalController {
+  constructor(
+    private lostChangeObjectFactory: LostChangeObjectFactory,
+    private ngbModal : NgbModal,
+    private log: LoggerService,
+    private lostChanges: ExplorationChange[],
+    private controller: LostChangesModalController
+  ) {
+    this.controller('ConfirmOrCancelModalController', {
+      uibModalInstance: this.ngbModal
+    });
+
+    lostChanges = this.lostChanges.map(
+      this.lostChangeObjectFactory.createNew);
+    this.log.error('Lost changes: ' + JSON.stringify(lostChanges));
+  }
+}
+

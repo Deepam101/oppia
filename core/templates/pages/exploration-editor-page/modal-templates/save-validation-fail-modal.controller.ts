@@ -16,22 +16,24 @@
  * @fileoverview Controller for non strict validation fail modal.
  */
 import { WindowRef } from 'services/contextual/window-ref.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 export class SaveValidationFailModalController {
-MSECS_TO_REFRESH :number = 20;
-constructor(
-    private windowRef: WindowRef
-) {}
+  MSECS_TO_REFRESH :number = 20;
+  constructor(
+      private windowRef: WindowRef,
+      private ngbModal: NgbModal
+  ) {}
 
 
-_refreshPage(delay: number): void {
-  setTimeout(() => {
-    this.windowRef.nativeWindow.location.reload();
-  }, delay);
-}
+  _refreshPage(delay: number): void {
+    setTimeout(() => {
+      this.windowRef.nativeWindow.location.reload();
+    }, delay);
+  }
 
-closeAndRefresh(): void {
-  $uibModalInstance.dismiss('cancel');
-  this._refreshPage(this.MSECS_TO_REFRESH);
-}
+  closeAndRefresh(): void {
+    this.ngbModal.dismissAll('cancel');
+    this._refreshPage(this.MSECS_TO_REFRESH);
+  }
 }

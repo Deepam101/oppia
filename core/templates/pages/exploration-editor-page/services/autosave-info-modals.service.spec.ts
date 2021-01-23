@@ -18,14 +18,14 @@
 
 import { LocalStorageService } from 'services/local-storage.service';
 import { TestBed } from '@angular/core/testing';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UrlInterpolationService } from
   'domain/utilities/url-interpolation.service';
+import { AutosaveInfoModalsService } from './autosave-info-modals.service';
 
 describe('AutosaveInfoModalsService', () => {
-  let AutosaveInfoModalsService = null;
-  let $uibModal = null;
-  let $q = null;
-  let $rootScope = null;
+  let autosaveInfoModalsService: AutosaveInfoModalsService;
+  let ngbModal = null;
   const explorationId = '0';
   const lostChanges = [];
 
@@ -33,113 +33,111 @@ describe('AutosaveInfoModalsService', () => {
     TestBed.configureTestingModule({
       providers: [
         LocalStorageService,
-        UrlInterpolationService
+        UrlInterpolationService,
+        NgbModal,
+        AutosaveInfoModalsService
       ]
     });
+    autosaveInfoModalsService = TestBed.get(AutosaveInfoModalsService);
+    ngbModal = TestBed.get(NgbModal);
+    // localStorageService = TestBed.get(LocalStorageService);
+    // urlInterpolationService = TestBed.get(UrlInterpolationService);
   });
 
-  beforeEach(angular.mock.module('oppia'));
-  beforeEach(angular.mock.inject(($injector) => {
-    AutosaveInfoModalsService = $injector.get('AutosaveInfoModalsService');
-    $uibModal = $injector.get('$uibModal');
-    $q = $injector.get('$q');
-    $rootScope = $injector.get('$rootScope');
-  }));
-
-  it('should call $uibModal open when opening non strict validation fail' +
+  it('should call ngbModal open when opening non strict validation fail' +
     ' modal', () => {
-    const modalOpenSpy = spyOn($uibModal, 'open').and.callThrough();
-    AutosaveInfoModalsService.showNonStrictValidationFailModal();
+    const modalOpenSpy = spyOn(ngbModal, 'open').and.callThrough();
+    autosaveInfoModalsService.showNonStrictValidationFailModal();
     expect(modalOpenSpy).toHaveBeenCalled();
   });
 
   it('should close non strict validation fail modal successfully',
     () => {
-      expect(AutosaveInfoModalsService.isModalOpen()).toBe(false);
-      spyOn($uibModal, 'open').and.returnValue({
-        result: $q.resolve()
+      expect(autosaveInfoModalsService.isModalOpen()).toBe(false);
+      spyOn(ngbModal, 'open').and.returnValue({
+        result: resolve()
       });
-      AutosaveInfoModalsService.showNonStrictValidationFailModal();
-      expect(AutosaveInfoModalsService.isModalOpen()).toBe(true);
-      $rootScope.$apply();
+      autosaveInfoModalsService.showNonStrictValidationFailModal();
+      expect(autosaveInfoModalsService.isModalOpen()).toBe(true);
 
-      expect(AutosaveInfoModalsService.isModalOpen()).toBe(false);
+
+      expect(autosaveInfoModalsService.isModalOpen()).toBe(false);
     });
 
   it('should handle rejects when closing non strict validation fail modal',
     () => {
-      expect(AutosaveInfoModalsService.isModalOpen()).toBe(false);
-      spyOn($uibModal, 'open').and.returnValue({
+      expect(autosaveInfoModalsService.isModalOpen()).toBe(false);
+      spyOn(ngbModal, 'open').and.returnValue({
         result: $q.reject()
       });
-      AutosaveInfoModalsService.showNonStrictValidationFailModal();
-      expect(AutosaveInfoModalsService.isModalOpen()).toBe(true);
-      $rootScope.$apply();
+      autosaveInfoModalsService.showNonStrictValidationFailModal();
+      expect(autosaveInfoModalsService.isModalOpen()).toBe(true);
 
-      expect(AutosaveInfoModalsService.isModalOpen()).toBe(false);
+
+      expect(autosaveInfoModalsService.isModalOpen()).toBe(false);
     });
 
-  it('should call $uibModal open when opening version mismatch' +
+  it('should call ngbModal open when opening version mismatch' +
     ' modal', () => {
-    const modalOpenSpy = spyOn($uibModal, 'open').and.callThrough();
-    AutosaveInfoModalsService.showVersionMismatchModal(lostChanges);
+    const modalOpenSpy = spyOn(ngbModal, 'open').and.callThrough();
+    autosaveInfoModalsService.showVersionMismatchModal(lostChanges);
     expect(modalOpenSpy).toHaveBeenCalled();
   });
 
   it('should close version mismatch modal successfully', () => {
-    expect(AutosaveInfoModalsService.isModalOpen()).toBe(false);
-    spyOn($uibModal, 'open').and.returnValue({
+    expect(autosaveInfoModalsService.isModalOpen()).toBe(false);
+    spyOn(ngbModal, 'open').and.returnValue({
       result: $q.resolve()
     });
-    AutosaveInfoModalsService.showVersionMismatchModal(lostChanges);
-    expect(AutosaveInfoModalsService.isModalOpen()).toBe(true);
-    $rootScope.$apply();
+    autosaveInfoModalsService.showVersionMismatchModal(lostChanges);
+    // expect(autosaveInfoModalsService.isModalOpen()).toBe(true);
+    // $rootScope.$apply();
 
-    expect(AutosaveInfoModalsService.isModalOpen()).toBe(false);
+    expect(autosaveInfoModalsService.isModalOpen()).toBe(false);
   });
 
   it('should handle rejects when dismissing save version mismatch modal',
     () => {
-      expect(AutosaveInfoModalsService.isModalOpen()).toBe(false);
-      spyOn($uibModal, 'open').and.returnValue({
-        result: $q.reject()
+      expect(autosaveInfoModalsService.isModalOpen()).toBe(false);
+      spyOn(ngbModal, 'open').and.returnValue({
+        result: reject()
       });
-      AutosaveInfoModalsService.showVersionMismatchModal(lostChanges);
-      expect(AutosaveInfoModalsService.isModalOpen()).toBe(true);
-      $rootScope.$apply();
+      autosaveInfoModalsService.showVersionMismatchModal(lostChanges);
+      expect(autosaveInfoModalsService.isModalOpen()).toBe(true);
 
-      expect(AutosaveInfoModalsService.isModalOpen()).toBe(false);
+
+      expect(autosaveInfoModalsService.isModalOpen()).toBe(false);
     });
 
-  it('should call $uibModal open when opening show lost changes modal',
+  it('should call ngbModal open when opening show lost changes modal',
     () => {
-      const modalOpenSpy = spyOn($uibModal, 'open').and.callThrough();
-      AutosaveInfoModalsService.showLostChangesModal(
+      const modalOpenSpy = spyOn(ngbModal, 'open').and.callThrough();
+      autosaveInfoModalsService.showLostChangesModal(
         lostChanges, explorationId);
       expect(modalOpenSpy).toHaveBeenCalled();
     });
 
   it('should close show lost changes modal successfully', () => {
-    expect(AutosaveInfoModalsService.isModalOpen()).toBe(false);
-    spyOn($uibModal, 'open').and.returnValue({
+    expect(autosaveInfoModalsService.isModalOpen()).toBe(false);
+    spyOn(ngbModal, 'open').and.returnValue({
       result: $q.resolve()
     });
-    AutosaveInfoModalsService.showLostChangesModal(lostChanges, explorationId);
-    expect(AutosaveInfoModalsService.isModalOpen()).toBe(true);
+    autosaveInfoModalsService.showLostChangesModal(lostChanges, explorationId);
+    expect(autosaveInfoModalsService.isModalOpen()).toBe(true);
     $rootScope.$apply();
 
-    expect(AutosaveInfoModalsService.isModalOpen()).toBe(false);
+    expect(autosaveInfoModalsService.isModalOpen()).toBe(false);
   });
 
   it('should handle reject when dismissing show lost changes modal', () => {
-    expect(AutosaveInfoModalsService.isModalOpen()).toBe(false);
-    spyOn($uibModal, 'open').and.returnValue({
+    expect(autosaveInfoModalsService.isModalOpen()).toBe(false);
+    spyOn(ngbModal, 'open').and.returnValue({
       result: $q.reject()
     });
-    AutosaveInfoModalsService.showLostChangesModal(lostChanges, explorationId);
-    expect(AutosaveInfoModalsService.isModalOpen()).toBe(true);
+    autosaveInfoModalsService.showLostChangesModal(lostChanges, explorationId);
+    expect(autosaveInfoModalsService.isModalOpen()).toBe(true);
     $rootScope.$apply();
 
-    expect(AutosaveInfoModalsService.isModalOpen()).toBe(false);
+    expect(autosaveInfoModalsService.isModalOpen()).toBe(false);
   });
 });

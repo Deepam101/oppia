@@ -11,47 +11,53 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
- 
+
 /**
  * @fileoverview Service for displaying different types of modals depending
  * on the type of response received as a result of the autosaving request.
  */
 
 import { UrlInterpolationService } from 'domain/utilities/url-interpolation.service.ts';
-import {} from 'pages/exploration-editor-page/services/exploration-data.service.ts';
+import { ExplorationDataService } from 'pages/exploration-editor-page/services/exploration-data.service.ts';
 import { LocalStorageService } from 'services/local-storage.service.ts';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {} from 'pages/exploration-editor-page/modal-templates/save-validation-fail-modal.controller.ts';
 import {} from 'pages/exploration-editor-page/modal-templates/save-version-mismatch-modal.controller.ts';
 import {} from 'pages/exploration-editor-page/modal-templates/lost-changes-modal.controller.ts';
+import { downgradeInjectable } from '@angular/upgrade/static';
+import { ExplorationChange } from 'domain/exploration/exploration-draft.model';
 
 export class AutosaveInfoModalsService {
-  constructor(
-      urlInterpolationService : UrlInterpolationService,
-      localStorageService : LocalStorageService,
-  ) {}
   private _isModalOpen = false;
-  showNonStrictValidationFailModal() {
-    $uibModal.open({
-      templateUrl: UrlInterpolationService.getDirectiveTemplateUrl(
+  constructor(
+      private urlInterpolationService : UrlInterpolationService,
+      private localStorageService : LocalStorageService,
+      private explorationDataService : ExplorationDataService,
+      private ngbModal: NgbModal
+  ) {}
+
+  showNonStrictValidationFailModal(): void {
+    this.ngbModal.open({
+      templateUrl: this.urlInterpolationService.getDirectiveTemplateUrl(
         '/pages/exploration-editor-page/modal-templates/' +
         'save-validation-fail-modal.template.html'),
       // Prevent modal from closing when the user clicks outside it.
       backdrop: 'static',
       controller: 'SaveValidationFailModalController'
     }).result.then(function() {
-      _isModalOpen = false;
+      this._isModalOpen = false;
     }, function() {
-      _isModalOpen = false;
+      this._isModalOpen = false;
     });
 
-    _isModalOpen = true;
-  },
-  isModalOpen: function() {
-    return _isModalOpen;
-  },
-  showVersionMismatchModal: function(lostChanges) {
-    $uibModal.open({
-      templateUrl: UrlInterpolationService.getDirectiveTemplateUrl(
+    this._isModalOpen = true;
+  }
+  isModalOpen(): boolean {
+    return this._isModalOpen;
+  }
+  showVersionMismatchModal(lostChanges: ExplorationChange[]): void {
+    this.ngbModal.open({
+      templateUrl: this.urlInterpolationService.getDirectiveTemplateUrl(
         '/pages/exploration-editor-page/modal-templates/' +
         'save-version-mismatch-modal.template.html'),
       // Prevent modal from closing when the user clicks outside it.
@@ -62,16 +68,17 @@ export class AutosaveInfoModalsService {
       controller: 'SaveVersionMismatchModalController',
       windowClass: 'oppia-autosave-version-mismatch-modal'
     }).result.then(function() {
-      _isModalOpen = false;
+      this._isModalOpen = false;
     }, function() {
-      _isModalOpen = false;
+      this._isModalOpen = false;
     });
 
-    _isModalOpen = true;
-  },
-  showLostChangesModal: function(lostChanges, explorationId) {
-    $uibModal.open({
-      templateUrl: UrlInterpolationService.getDirectiveTemplateUrl(
+    this._isModalOpen = true;
+  }
+  showLostChangesModal(
+      lostChanges: ExplorationChange[], explorationId: number): void {
+    this.ngbModal.open({
+      templateUrl: this.urlInterpolationService.getDirectiveTemplateUrl(
         '/pages/exploration-editor-page/modal-templates/' +
         'lost-changes-modal.template.html'),
       // Prevent modal from closing when the user clicks outside it.
@@ -82,14 +89,19 @@ export class AutosaveInfoModalsService {
       controller: 'LostChangesModalController',
       windowClass: 'oppia-lost-changes-modal'
     }).result.then(function() {
-      _isModalOpen = false;
+      this._isModalOpen = false;
     }, function() {
       // When the user clicks on discard changes button, signal backend
       // to discard the draft and reload the page thereafter.
-      LocalStorageService.removeExplorationDraft(explorationId);
-      _isModalOpen = false;
+      this.localStorageService.removeExplorationDraft(explorationId);
+      this._isModalOpen = false;
     });
 
-    _isModalOpen = true;
+    this._isModalOpen = true;
   }
 }
+
+angular.module('oppia').factory(
+  'AutosaveInfoModalsService',
+  downgradeInjectable(AutosaveInfoModalsService));
+
