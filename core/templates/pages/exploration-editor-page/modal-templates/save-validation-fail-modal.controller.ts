@@ -17,8 +17,13 @@
  */
 import { WindowRef } from 'services/contextual/window-ref.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-
-export class SaveValidationFailModalController {
+import { Component } from '@angular/core';
+@Component({
+  selector: 'save-validation-fail-modal',
+  templateUrl: './save-validation-fail-modal.template.html',
+  styleUrls: []
+})
+export class SaveValidationFailModalComponent {
   MSECS_TO_REFRESH :number = 20;
   constructor(
       private windowRef: WindowRef,

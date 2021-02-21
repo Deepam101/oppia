@@ -21,9 +21,9 @@ import { UrlInterpolationService } from 'domain/utilities/url-interpolation.serv
 import { ExplorationDataService } from 'pages/exploration-editor-page/services/exploration-data.service.ts';
 import { LocalStorageService } from 'services/local-storage.service.ts';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import {} from 'pages/exploration-editor-page/modal-templates/save-validation-fail-modal.controller.ts';
-import {} from 'pages/exploration-editor-page/modal-templates/save-version-mismatch-modal.controller.ts';
-import {} from 'pages/exploration-editor-page/modal-templates/lost-changes-modal.controller.ts';
+import { SaveValidationFailModalComponent } from 'pages/exploration-editor-page/modal-templates/save-validation-fail-modal.controller.ts';
+import { SaveVersionMismatchModalComponent } from 'pages/exploration-editor-page/modal-templates/save-version-mismatch-modal.controller.ts';
+import { LostChangesModalComponent } from 'pages/exploration-editor-page/modal-templates/lost-changes-modal.controller.ts';
 import { downgradeInjectable } from '@angular/upgrade/static';
 import { ExplorationChange } from 'domain/exploration/exploration-draft.model';
 
@@ -37,14 +37,11 @@ export class AutosaveInfoModalsService {
   ) {}
 
   showNonStrictValidationFailModal(): void {
-    this.ngbModal.open({
-      templateUrl: this.urlInterpolationService.getDirectiveTemplateUrl(
-        '/pages/exploration-editor-page/modal-templates/' +
-        'save-validation-fail-modal.template.html'),
-      // Prevent modal from closing when the user clicks outside it.
-      backdrop: 'static',
-      controller: 'SaveValidationFailModalController'
-    }).result.then(function() {
+    this.ngbModal.open(
+      SaveValidationFailModalComponent,
+      {
+        backdrop: 'static',
+      }).result.then(function() {
       this._isModalOpen = false;
     }, function() {
       this._isModalOpen = false;
@@ -56,39 +53,27 @@ export class AutosaveInfoModalsService {
     return this._isModalOpen;
   }
   showVersionMismatchModal(lostChanges: ExplorationChange[]): void {
-    this.ngbModal.open({
-      templateUrl: this.urlInterpolationService.getDirectiveTemplateUrl(
-        '/pages/exploration-editor-page/modal-templates/' +
-        'save-version-mismatch-modal.template.html'),
-      // Prevent modal from closing when the user clicks outside it.
-      backdrop: 'static',
-      resolve: {
-        lostChanges: () => lostChanges
-      },
-      controller: 'SaveVersionMismatchModalController',
-      windowClass: 'oppia-autosave-version-mismatch-modal'
-    }).result.then(function() {
+    let modalRef = this.ngbModal.open(
+      SaveVersionMismatchModalComponent,
+      {
+        backdrop: 'static',
+        windowClass: 'oppia-autosave-version-mismatch-modal'
+      }).result.then(function() {
       this._isModalOpen = false;
     }, function() {
       this._isModalOpen = false;
     });
-
+    modalRef.componentInstance.lostChanges = lostChanges;
     this._isModalOpen = true;
   }
   showLostChangesModal(
       lostChanges: ExplorationChange[], explorationId: number): void {
-    this.ngbModal.open({
-      templateUrl: this.urlInterpolationService.getDirectiveTemplateUrl(
-        '/pages/exploration-editor-page/modal-templates/' +
-        'lost-changes-modal.template.html'),
-      // Prevent modal from closing when the user clicks outside it.
-      backdrop: 'static',
-      resolve: {
-        lostChanges: () => lostChanges
-      },
-      controller: 'LostChangesModalController',
-      windowClass: 'oppia-lost-changes-modal'
-    }).result.then(function() {
+    const modalRef = this.ngbModal.open(
+      LostChangesModalComponent,
+      {
+        backdrop: 'static',
+        windowClass: 'oppia-lost-changes-modal'
+      }).result.then(function() {
       this._isModalOpen = false;
     }, function() {
       // When the user clicks on discard changes button, signal backend
@@ -96,7 +81,7 @@ export class AutosaveInfoModalsService {
       this.localStorageService.removeExplorationDraft(explorationId);
       this._isModalOpen = false;
     });
-
+    modalRef.componentInstance.lostChanges = lostChanges;
     this._isModalOpen = true;
   }
 }

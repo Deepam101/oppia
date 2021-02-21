@@ -12,53 +12,33 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { LostChangeObjectFactory } from 'domain/exploration/LostChangeObjectFactory';
 import { LoggerService } from 'services/contextual/logger.service';
 import { ExplorationChange } from 'domain/exploration/exploration-draft.model';
+import { Component } from '@angular/core';
 
 /**
  * @fileoverview Controller for lost changes modal.
  */
 
-require(
-  'components/common-layout-directives/common-elements/' +
-  'confirm-or-cancel-modal.controller.ts');
-require(
-  'pages/exploration-editor-page/changes-in-human-readable-form/' +
-  'changes-in-human-readable-form.component.ts');
+import { ConfirmOrCancelModalComponent } from 'components/common-layout-directives/common-elements/confirm-or-cancel-modal.controller.ts';
 
-angular.module('oppia').controller('LostChangesModalController', [
-  '$controller', '$log', '$scope', '$uibModalInstance',
-  'LostChangeObjectFactory', 'lostChanges',
-  function(
-      $controller, $log, $scope, $uibModalInstance,
-      LostChangeObjectFactory, lostChanges) {
-    $controller('ConfirmOrCancelModalController', {
-      $scope: $scope,
-      $uibModalInstance: $uibModalInstance
-    });
-
-    $scope.lostChanges = lostChanges.map(
-      LostChangeObjectFactory.createNew);
-    $log.error('Lost changes: ' + JSON.stringify(lostChanges));
-  }
-]);
-
-
-export class LostChangesModalController {
+@Component({
+  selector: 'lost-changes-modal',
+  templateUrl: './lost-changes-modal.template.html',
+  styleUrls: []
+})
+export class LostChangesModalComponent extends ConfirmOrCancelModalComponent {
+  lostChanges : ExplorationChange[];
   constructor(
     private lostChangeObjectFactory: LostChangeObjectFactory,
-    private ngbModal : NgbModal,
+    public ngbModal : NgbActiveModal,
     private log: LoggerService,
-    private lostChanges: ExplorationChange[],
-    private controller: LostChangesModalController
   ) {
-    this.controller('ConfirmOrCancelModalController', {
-      uibModalInstance: this.ngbModal
-    });
+    super(ngbModal);
 
-    lostChanges = this.lostChanges.map(
+    this.lostChanges = this.lostChanges.map(
       this.lostChangeObjectFactory.createNew);
     this.log.error('Lost changes: ' + JSON.stringify(lostChanges));
   }

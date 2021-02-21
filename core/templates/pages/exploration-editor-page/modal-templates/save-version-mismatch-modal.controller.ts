@@ -21,13 +21,20 @@ import { ExplorationDataService } from 'pages/exploration-editor-page/services/e
 import { LostChangeObjectFactory } from 'domain/exploration/LostChangeObjectFactory';
 import { LoggerService } from 'services/contextual/logger.service';
 import { ExplorationChange } from 'domain/exploration/exploration-draft.model';
+import { Component } from '@angular/core';
 
-export class SaveVersionMismatchModalController {
+
+@Component({
+  selector: 'save-version-mismatch-modal',
+  templateUrl: './save-version-mismatch-modal.template.html',
+  styleUrls: []
+})
+export class SaveVersionMismatchModalComponent {
   MSECS_TO_REFRESH: number = 20;
+  lostChanges: ExplorationChange[];
   constructor(
     private windowRef: WindowRef,
     private explorationDataService : ExplorationDataService,
-    private lostChanges: ExplorationChange[],
     private lostChangeObjectFactory: LostChangeObjectFactory,
     private loggerservice : LoggerService
   ) {
@@ -36,7 +43,7 @@ export class SaveVersionMismatchModalController {
     if (haslostChanges) {
       // TODO(sll): This should also include changes to exploration
       // properties (such as the exploration title, category, etc.).
-      lostChanges = this.lostChanges.map(
+      this.lostChanges = this.lostChanges.map(
         this.lostChangeObjectFactory.createNew);
       this.loggerservice.error(
         'Lost changes: ' + JSON.stringify(this.lostChanges));

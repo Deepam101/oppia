@@ -12,15 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import { Component } from '@angular/core';
+
 /**
  * @fileoverview Component to get changes in human readable form.
  */
-
-export class changesInHumanReadableForm{
+@Component({
+  selector: 'changes-in-human-readable-form',
+  templateUrl: './changes-in-human-readable-form.component.html',
+  styleUrls: []
+})
+export class changesInHumanReadableForm {
   bindings: {
     lostChanges: '='
-  },
-  template: require(
-    './changes-in-human-readable-form.component.html')
+  };
 }
 
