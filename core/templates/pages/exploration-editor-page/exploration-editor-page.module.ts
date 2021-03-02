@@ -40,6 +40,9 @@ import { SwitchContentLanguageRefreshRequiredModalComponent } from 'pages/explor
     SharedComponentsModule
   ],
   declarations: [
+    SaveValidationFailModalComponent,
+    LostChangesModalComponent,
+    SaveVersionMismatchModalComponent,
     CkEditorCopyToolbarComponent,
     ContentLanguageSelectorComponent,
     OppiaAngularRootComponent,
@@ -48,6 +51,9 @@ import { SwitchContentLanguageRefreshRequiredModalComponent } from 'pages/explor
     SwitchContentLanguageRefreshRequiredModalComponent
   ],
   entryComponents: [
+    SaveValidationFailModalComponent,
+    LostChangesModalComponent,
+    SaveVersionMismatchModalComponent,
     CkEditorCopyToolbarComponent,
     ContentLanguageSelectorComponent,
     OppiaAngularRootComponent,
@@ -75,6 +81,9 @@ class ExplorationEditorPageModule {
 
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { downgradeModule } from '@angular/upgrade/static';
+import { SaveVersionMismatchModalComponent } from './modal-templates/save-version-mismatch-modal.controller';
+import { LostChangesModalComponent } from './modal-templates/lost-changes-modal.controller';
+import { SaveValidationFailModalComponent } from './modal-templates/save-validation-fail-modal.controller';
 
 const bootstrapFn = (extraProviders: StaticProvider[]) => {
   const platformRef = platformBrowserDynamic(extraProviders);

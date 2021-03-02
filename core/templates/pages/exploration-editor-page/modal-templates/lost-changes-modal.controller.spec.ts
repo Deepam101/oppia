@@ -16,15 +16,14 @@
  * @fileoverview Unit tests for LostChangesModalController.
  */
 
-import { LostChangeObjectFactory } from
-  'domain/exploration/LostChangeObjectFactory';
 import { TestBed } from '@angular/core/testing';
 import { UtilsService } from 'services/utils.service';
+import { LoggerService } from 'services/contextual/logger.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
-describe('Lost Changes Modal Controller', () => {
-  let $scope = null;
-  let $uibModalInstance = null;
-  let $log = null;
+fdescribe('Lost Changes Modal Controller', () => {
+  let ngbModalInstance : NgbModal;
+  let log : LoggerService;
   let logSpy = null;
   const explorationId = '0';
   const lostChanges = [{
@@ -32,42 +31,26 @@ describe('Lost Changes Modal Controller', () => {
     state_name: 'State name',
   }];
 
-  beforeEach(function() {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
-        UtilsService
+        UtilsService,
+        LoggerService,
+        explorationId,
+        lostChanges,
+        ngbModalInstance
       ]
     });
-  });
+    log = TestBed.get(LoggerService);
+    logSpy = spyOn(log, 'error').and.callThrough();
+    ngbModalInstance = jasmine.createSpyObj(
+      'ngbModalInstance', ['close', 'dismiss']);
 
-  beforeEach(angular.mock.module('oppia', ($provide) => {
-    $provide.value('LostChangeObjectFactory', TestBed.get(
-      LostChangeObjectFactory));
-  }));
-
-  beforeEach(angular.mock.inject(($injector, $controller) => {
-    $log = $injector.get('$log');
-
-    logSpy = spyOn($log, 'error').and.callThrough();
-
-    $uibModalInstance = jasmine.createSpyObj(
-      '$uibModalInstance', ['close', 'dismiss']);
-
-    const $rootScope = $injector.get('$rootScope');
-    $scope = $rootScope.$new();
-    $controller(
-      'LostChangesModalController', {
-        $scope: $scope,
-        $uibModalInstance: $uibModalInstance,
-        explorationId: explorationId,
-        lostChanges: lostChanges
-      });
-  }));
-
-  it('should evaluates lostChanges when controller is initialized', () => {
-    expect($scope.lostChanges[0].cmd).toBe('add_state');
-    expect($scope.lostChanges[0].stateName).toBe('State name');
-    expect(logSpy).toHaveBeenCalledWith(
-      'Lost changes: ' + JSON.stringify(lostChanges));
+    it('should evaluates lostChanges when controller is initialized', () => {
+      expect(lostChanges[0].cmd).toBe('add_state');
+      expect(lostChanges[0].state_name).toBe('State name');
+      expect(logSpy).toHaveBeenCalledWith(
+        'Lost changes: ' + JSON.stringify(lostChanges));
+    });
   });
 });

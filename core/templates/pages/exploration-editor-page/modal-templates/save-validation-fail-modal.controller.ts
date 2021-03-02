@@ -16,7 +16,7 @@
  * @fileoverview Controller for non strict validation fail modal.
  */
 import { WindowRef } from 'services/contextual/window-ref.service';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Component } from '@angular/core';
 @Component({
   selector: 'save-validation-fail-modal',
@@ -27,7 +27,7 @@ export class SaveValidationFailModalComponent {
   MSECS_TO_REFRESH :number = 20;
   constructor(
       private windowRef: WindowRef,
-      private ngbModal: NgbModal
+      private ngbModal: NgbActiveModal
   ) {}
 
 
@@ -38,7 +38,7 @@ export class SaveValidationFailModalComponent {
   }
 
   closeAndRefresh(): void {
-    this.ngbModal.dismissAll('cancel');
+    this.ngbModal.dismiss('cancel');
     this._refreshPage(this.MSECS_TO_REFRESH);
   }
 }

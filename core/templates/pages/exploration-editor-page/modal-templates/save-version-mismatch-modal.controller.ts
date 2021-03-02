@@ -18,10 +18,10 @@
 
 import { WindowRef } from 'services/contextual/window-ref.service';
 import { ExplorationDataService } from 'pages/exploration-editor-page/services/exploration-data.service.ts';
-import { LostChangeObjectFactory } from 'domain/exploration/LostChangeObjectFactory';
+import { LostChange, LostChangeObjectFactory } from 'domain/exploration/LostChangeObjectFactory';
 import { LoggerService } from 'services/contextual/logger.service';
 import { ExplorationChange } from 'domain/exploration/exploration-draft.model';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 
 @Component({
@@ -31,22 +31,24 @@ import { Component } from '@angular/core';
 })
 export class SaveVersionMismatchModalComponent {
   MSECS_TO_REFRESH: number = 20;
-  lostChanges: ExplorationChange[];
+  lostChangesArray : LostChange[];
+  @Input() lostChanges: ExplorationChange[];
   constructor(
     private windowRef: WindowRef,
     private explorationDataService : ExplorationDataService,
     private lostChangeObjectFactory: LostChangeObjectFactory,
     private loggerservice : LoggerService
-  ) {
+  ) {}
+  ngOnInit(): void {
     let haslostChanges = (this.lostChanges && this.lostChanges.length > 0);
 
     if (haslostChanges) {
       // TODO(sll): This should also include changes to exploration
       // properties (such as the exploration title, category, etc.).
-      this.lostChanges = this.lostChanges.map(
+      this.lostChangesArray = this.lostChanges.map(
         this.lostChangeObjectFactory.createNew);
       this.loggerservice.error(
-        'Lost changes: ' + JSON.stringify(this.lostChanges));
+        'Lost changes: ' + JSON.stringify(this.lostChangesArray));
     }
   }
   _refreshPage(delay: number): void {

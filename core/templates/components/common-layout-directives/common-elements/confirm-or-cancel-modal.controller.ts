@@ -12,21 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-
 /**
  * @fileoverview Controller for simple modal with only two actions: close or
  * dismiss.
  */
-export class ConfirmOrCancelModalComponent {
-  constructor(
-    public ngbModal : NgbActiveModal
-  ) {}
-  confirm(value: unknown): void {
-    this.ngbModal.close(value);
+
+angular.module('oppia').controller('ConfirmOrCancelModalController', [
+  '$scope', '$uibModalInstance',
+  function($scope, $uibModalInstance) {
+    $scope.confirm = function(value) {
+      $uibModalInstance.close(value);
+    };
+
+    $scope.cancel = function(value) {
+      var dismissValue = value || 'cancel';
+      $uibModalInstance.dismiss(dismissValue);
+    };
   }
-  cancel(value: unknown): void {
-    let dismissValue = value || 'cancel';
-    this.ngbModal.dismiss(dismissValue);
-  }
-}
+]);

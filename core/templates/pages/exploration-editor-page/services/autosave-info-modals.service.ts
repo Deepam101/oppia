@@ -17,22 +17,20 @@
  * on the type of response received as a result of the autosaving request.
  */
 
-import { UrlInterpolationService } from 'domain/utilities/url-interpolation.service.ts';
-import { ExplorationDataService } from 'pages/exploration-editor-page/services/exploration-data.service.ts';
-import { LocalStorageService } from 'services/local-storage.service.ts';
+
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { SaveValidationFailModalComponent } from 'pages/exploration-editor-page/modal-templates/save-validation-fail-modal.controller.ts';
 import { SaveVersionMismatchModalComponent } from 'pages/exploration-editor-page/modal-templates/save-version-mismatch-modal.controller.ts';
 import { LostChangesModalComponent } from 'pages/exploration-editor-page/modal-templates/lost-changes-modal.controller.ts';
 import { downgradeInjectable } from '@angular/upgrade/static';
 import { ExplorationChange } from 'domain/exploration/exploration-draft.model';
-
+import { Injectable } from '@angular/core';
+@Injectable({
+  providedIn: 'root'
+})
 export class AutosaveInfoModalsService {
   private _isModalOpen = false;
   constructor(
-      private urlInterpolationService : UrlInterpolationService,
-      private localStorageService : LocalStorageService,
-      private explorationDataService : ExplorationDataService,
       private ngbModal: NgbModal
   ) {}
 
@@ -58,22 +56,25 @@ export class AutosaveInfoModalsService {
       {
         backdrop: 'static',
         windowClass: 'oppia-autosave-version-mismatch-modal'
-      }).result.then(function() {
+      });
+    modalRef.componentInstance.lostChanges = lostChanges;
+    modalRef.result.then(function() {
       this._isModalOpen = false;
     }, function() {
       this._isModalOpen = false;
     });
-    modalRef.componentInstance.lostChanges = lostChanges;
     this._isModalOpen = true;
   }
   showLostChangesModal(
-      lostChanges: ExplorationChange[], explorationId: number): void {
+      lostChanges: ExplorationChange[], explorationId: string): void {
     const modalRef = this.ngbModal.open(
       LostChangesModalComponent,
       {
         backdrop: 'static',
         windowClass: 'oppia-lost-changes-modal'
-      }).result.then(function() {
+      });
+    modalRef.componentInstance.lostChanges = lostChanges;
+    modalRef.result.then(function() {
       this._isModalOpen = false;
     }, function() {
       // When the user clicks on discard changes button, signal backend
@@ -81,7 +82,6 @@ export class AutosaveInfoModalsService {
       this.localStorageService.removeExplorationDraft(explorationId);
       this._isModalOpen = false;
     });
-    modalRef.componentInstance.lostChanges = lostChanges;
     this._isModalOpen = true;
   }
 }

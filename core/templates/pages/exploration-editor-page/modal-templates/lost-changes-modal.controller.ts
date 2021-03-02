@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { LostChangeObjectFactory } from 'domain/exploration/LostChangeObjectFactory';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { LostChange, LostChangeObjectFactory } from 'domain/exploration/LostChangeObjectFactory';
 import { LoggerService } from 'services/contextual/logger.service';
 import { ExplorationChange } from 'domain/exploration/exploration-draft.model';
 import { Component } from '@angular/core';
@@ -21,16 +21,17 @@ import { Component } from '@angular/core';
 /**
  * @fileoverview Controller for lost changes modal.
  */
-
-import { ConfirmOrCancelModalComponent } from 'components/common-layout-directives/common-elements/confirm-or-cancel-modal.controller.ts';
+import { TakeBreakModalComponent } from 'pages/exploration-player-page/templates/take-break-modal.component.ts';
+import { Input } from '@angular/core';
 
 @Component({
   selector: 'lost-changes-modal',
   templateUrl: './lost-changes-modal.template.html',
   styleUrls: []
 })
-export class LostChangesModalComponent extends ConfirmOrCancelModalComponent {
-  lostChanges : ExplorationChange[];
+export class LostChangesModalComponent extends TakeBreakModalComponent {
+  @Input() lostChanges: ExplorationChange[];
+  lostChangesArray : LostChange[];
   constructor(
     private lostChangeObjectFactory: LostChangeObjectFactory,
     public ngbModal : NgbActiveModal,
@@ -38,9 +39,9 @@ export class LostChangesModalComponent extends ConfirmOrCancelModalComponent {
   ) {
     super(ngbModal);
 
-    this.lostChanges = this.lostChanges.map(
+    this.lostChangesArray = this.lostChanges.map(
       this.lostChangeObjectFactory.createNew);
-    this.log.error('Lost changes: ' + JSON.stringify(lostChanges));
+    this.log.error('Lost changes: ' + JSON.stringify(this.lostChangesArray));
   }
 }
 
