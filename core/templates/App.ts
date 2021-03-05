@@ -23,6 +23,7 @@
  * It won't be required in Angular 9.
  * TODO(#9172): Remove the import when upgraded to Angular 9.
  */
+import 'firebase/auth';
 import 'hammerjs';
 require('app.constants.ajs.ts');
 
@@ -64,7 +65,7 @@ require('services/rte-helper.service.ts');
 require('services/site-analytics.service.ts');
 require('services/state-interaction-stats.service.ts');
 require('services/stateful/focus-manager.service.ts');
-require('services/translation-file-hash-loader.service.ts');
+require('services/translation-file-hash-loader-backend-api.service.ts');
 require('services/user.service.ts');
 
 require('google-analytics.initializer.ts');
@@ -132,17 +133,14 @@ angular.module('oppia').config([
       'PageTitleService', 'ParamChangesObjectFactory',
       'ParamMetadataObjectFactory', 'ParamSpecsObjectFactory',
       'PencilCodeEditorRulesService', 'PlayerCorrectnessFeedbackEnabledService',
-      'PlayerPositionService', 'PlayerTranscriptService',
       'PlaythroughIssuesBackendApiService',
       'PredictionAlgorithmRegistryService', 'PretestQuestionBackendApiService',
       'ProfilePageBackendApiService', 'QuestionBackendApiService',
-      'QuestionSummaryForOneSkillObjectFactory', 'QuestionSummaryObjectFactory',
       'RatingComputationService',
       'ReadOnlySubtopicPageObjectFactory', 'ReviewTestBackendApiService',
       'RubricObjectFactory', 'SchemaDefaultValueService',
       'SchemaUndefinedLastElementService', 'SidebarStatusService',
-      'SiteAnalyticsService', 'SkillObjectFactory',
-      'SkillRightsBackendApiService', 'SolutionObjectFactory',
+      'SiteAnalyticsService', 'SkillObjectFactory', 'SolutionObjectFactory',
       'SpeechSynthesisChunkerService',
       'StateCardObjectFactory', 'StateClassifierMappingService',
       'StateInteractionStatsService',
@@ -378,7 +376,7 @@ angular.module('oppia').factory('$exceptionHandler', [
         // eslint-disable-next-line max-len
         // see: https://web.archive.org/web/20140210004225/http://msdn.microsoft.com/en-us/library/windows/apps/hh699850.aspx
         try {
-          throw new Error(exception);
+          throw new Error(`${exception}`);
         } catch (error) {
           exception = error;
         }
@@ -432,7 +430,7 @@ angular.module('oppia').factory('$exceptionHandler', [
           }
         );
       }
-      $log.error.apply($log, arguments);
+      $log.error(exception);
     };
   }
 ]);
