@@ -20,7 +20,7 @@ require(
   'rich_text_components/Skillreview/directives/' +
   'oppia-noninteractive-skillreview-concept-card-modal.controller.ts');
 
-require('components/concept-card/concept-card.directive.ts');
+require('components/concept-card/concept-card.component.ts');
 require(
   'components/common-layout-directives/common-elements/' +
   'confirm-or-cancel-modal.controller.ts');

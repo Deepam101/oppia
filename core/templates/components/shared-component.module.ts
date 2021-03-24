@@ -62,6 +62,7 @@ import { AuthService } from 'services/auth.service';
 import { ThreadTableComponent } from 'pages/exploration-editor-page/feedback-tab/thread-table/thread-table.component';
 import { TruncatePipe } from 'filters/string-utility-filters/truncate.pipe';
 import { SummaryListHeaderComponent } from './state-directives/answer-group-editor/summary-list-header.component';
+import { ConceptCardComponent } from './concept-card/concept-card.component';
 
 
 // TODO(#11462): Delete these conditional values once firebase auth is launched.
@@ -94,6 +95,7 @@ const firebaseAuthProviders = AuthService.firebaseAuthIsEnabled ? [
   declarations: [
     AttributionGuideComponent,
     BackgroundBannerComponent,
+    ConceptCardComponent,
     ExplorationEmbedButtonModalComponent,
     ExplorationSummaryTileDirective,
     KeyboardShortcutHelpModalComponent,
@@ -122,6 +124,7 @@ const firebaseAuthProviders = AuthService.firebaseAuthIsEnabled ? [
     ProfileLinkImageComponent, ProfileLinkTextComponent,
     // These elements will remain here even after migration.
     TakeBreakModalComponent,
+    ConceptCardComponent,
     ExplorationEmbedButtonModalComponent,
     KeyboardShortcutHelpModalComponent,
     SkillMasteryViewerComponent,
@@ -138,6 +141,7 @@ const firebaseAuthProviders = AuthService.firebaseAuthIsEnabled ? [
     NgbTooltipModule,
     // Components, directives, and pipes.
     BackgroundBannerComponent,
+    ConceptCardComponent,
     ExplorationSummaryTileDirective,
     SharingLinksComponent,
     StorySummaryTileDirective,

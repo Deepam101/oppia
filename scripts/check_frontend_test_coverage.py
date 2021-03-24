@@ -76,7 +76,7 @@ NOT_FULLY_COVERED_FILENAMES = [
     'collection-summary-tile.directive.ts',
     'collection-update.service.ts',
     'collection.model.ts',
-    'concept-card.directive.ts',
+    'concept-card.component.ts',
     'ConceptCardObjectFactory.ts',
     'context.service.ts',
     'continue-button.directive.ts',
